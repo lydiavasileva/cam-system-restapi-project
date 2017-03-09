@@ -18,5 +18,11 @@ class TestStreamingClass(unittest.TestCase):
         self.assertTrue( s.is_running() )
         self.assertEqual( s.destination, dest_ip )
 
+    def test_stop( self ):
+        s = Streaming()
+        s.start( dest_ip )
+        s.stop()
+        self.assertFalse( s.is_running() )
+
 if __name__ == '__main__':
     unittest.main()

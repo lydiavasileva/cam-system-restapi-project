@@ -12,3 +12,6 @@ class Streaming( object ):
     def start( self, dest_addr ):
         self.destination = dest_addr
         self.running = True
+
+    def stop( self ):
+        self.running = False
