@@ -1,0 +1,77 @@
+<html>
+<title>Accessing REST API on localhost</title>
+<head>
+<script>
+var baseUrl = 'http://localhost:5000/'
+
+function httpGet( url, callback )
+{
+  httpReq( "GET", url, callback, null )
+}
+
+function httpPut( url, data )
+{
+  json_data = JSON.stringify( data )
+  httpReq( "PUT", url, null, json_data )
+}
+
+function httpReq( method, url, callback, data ) 
+{
+  var xhr = new XMLHttpRequest();
+  var timeoutTime = 1000;
+  
+  xhr.ontimeout = function () {
+    console.error("The request for " + url + " timed out.");    
+  };
+  
+  xhr.onload = function() {
+    if (xhr.readyState === 4) { 
+      if (xhr.status === 200) {
+        if( callback != null ) {
+          callback( JSON.parse( xhr.responseText ) );
+        }
+      }
+      updateLastMessage( xhr.status + " " + xhr.statusText + "<br />" +  xhr.responseText );
+    }
+  };
+
+  xhr.open( method, url, true);
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.timeout = timeoutTime;
+  xhr.send(data);
+}
+
+function updateA0Value( data )
+{
+    document.getElementById('A0current').innerHTML = data['value'];
+    document.getElementById('A0set').value = data['value'];
+}
+
+function updateLastMessage( text )
+{
+    document.getElementById('lastMessage').innerHTML = text;
+}
+
+
+</script>
+</head>
+
+<body>
+
+<button type="button" onclick="httpGet( baseUrl + 'gpio/A0', updateA0Value )">Click to fetch latest value of A0</button>
+
+Current values from device: <br />
+
+<ul>
+    <li>A0: <label id="A0current">- X -</label> - 
+        set: <input name='A0set' id="A0set"></input>
+             <button type="button" onclick="httpPut( baseUrl + 'gpio/A0', { 'value': document.getElementById('A0set').value } )">set</button>
+    </li>
+</ul>
+
+<br />
+last message: <label id="lastMessage">- X -</label>
+
+</body>
+
+</html>
