@@ -4,6 +4,11 @@
 class Streaming( object ):
     def __init__( self ):
         self.running = False
+        self.destination = None
 
     def is_running( self ):
         return self.running
+
+    def start( self, dest_addr ):
+        self.destination = dest_addr
+        self.running = True
